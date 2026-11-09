@@ -4,6 +4,10 @@ on:
   push:
     branches: [main]
   pull_request:
+    # Docs-only PRs to the example (like the demo PR) change what the tests expect.
+    # The tests still run on every push to main.
+    paths-ignore:
+      - 'examples/acme-docs/docs/**'
 
 permissions:
   contents: read
