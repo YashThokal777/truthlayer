@@ -1,5 +1,10 @@
 # TruthLayer
 
+[![npm](https://img.shields.io/npm/v/truthlayer)](https://www.npmjs.com/package/truthlayer)
+[![CI](https://github.com/YashThokal777/truthlayer/actions/workflows/ci.yml/badge.svg)](https://github.com/YashThokal777/truthlayer/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+![Node 20+](https://img.shields.io/badge/node-%3E%3D20-brightgreen)
+
 **Your docs changed. Does your AI know?**
 
 TruthLayer is an open-source tool that keeps your product docs — and the AI assistant built on them — correct.
@@ -8,6 +13,8 @@ TruthLayer is an open-source tool that keeps your product docs — and the AI as
 - 🤖 **Runs in CI:** a GitHub Action comments on every pull request that makes your docs wrong.
 - 💬 **Cited chat assistant:** a local playground and an embeddable widget that answer from your docs, show sources and their age, and warn when a source may be outdated.
 - 🏠 **Local-first and free:** no database, no server to rent. Bring your own AI key (Google Gemini has a free tier) or run fully local with Ollama.
+
+![TruthLayer playground: a cited chat answer that warns about an outdated page, next to the knowledge report](.github/assets/playground.png)
 
 ```text
 $ npx truthlayer check
@@ -173,6 +180,8 @@ npx truthlayer dev
 - `http://127.0.0.1:4141/embed` — the floating widget on a sample website.
 
 Every answer cites its sources ([1], [2]) and shows when each source was last updated. If a source has a known problem, the answer shows a warning.
+
+![The chat widget on a sample website, answering with sources and flagging an outdated pricing page](.github/assets/widget.png)
 
 **AI provider.** Put your key in a `.env` file next to `truthlayer.yml`:
 

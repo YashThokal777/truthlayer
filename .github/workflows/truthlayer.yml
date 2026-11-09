@@ -1,0 +1,22 @@
+# Runs TruthLayer on the example docs, the same way you would on your own repo.
+name: TruthLayer
+
+on:
+  pull_request:
+    paths:
+      - 'examples/acme-docs/**'
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  knowledge-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: ./
+        with:
+          working-directory: examples/acme-docs
