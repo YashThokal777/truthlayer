@@ -1,0 +1,489 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-09T00:00:00Z",
+  "title": "Design System: TruthLayer",
+  "extensions": {
+    "colorMeta": {
+      "wall": {
+        "role": "primary",
+        "displayName": "Gallery Wall Green",
+        "canonical": "#1e3a36",
+        "oklch": "oklch(32.5% 0.035 183)",
+        "tonalRamp": [
+          "#090c0b",
+          "#1d2625",
+          "#324441",
+          "#496460",
+          "#6a8782",
+          "#95aaa6",
+          "#c1cecb",
+          "#ebf0ef"
+        ]
+      },
+      "wall-raised": {
+        "role": "primary",
+        "displayName": "Raised Wall",
+        "canonical": "#254641",
+        "oklch": "oklch(36.7% 0.040 183)",
+        "tonalRamp": [
+          "#090c0b",
+          "#1c2725",
+          "#304441",
+          "#466560",
+          "#668882",
+          "#93aba6",
+          "#c0cecb",
+          "#eaf0ef"
+        ]
+      },
+      "wall-line": {
+        "role": "primary",
+        "displayName": "Wall Line",
+        "canonical": "#35574f",
+        "oklch": "oklch(42.8% 0.042 177)",
+        "tonalRamp": [
+          "#080c0b",
+          "#1c2724",
+          "#304540",
+          "#45655d",
+          "#668980",
+          "#92aba4",
+          "#c0ceca",
+          "#eaf0ee"
+        ]
+      },
+      "on-wall": {
+        "role": "neutral",
+        "displayName": "On-Wall",
+        "canonical": "#eef2ee",
+        "oklch": "oklch(95.7% 0.007 145)",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#232423",
+          "#3e403e",
+          "#5b5f5b",
+          "#7e817e",
+          "#a3a5a3",
+          "#c9cbc9",
+          "#eeefee"
+        ]
+      },
+      "on-wall-muted": {
+        "role": "neutral",
+        "displayName": "On-Wall Muted",
+        "canonical": "#a9c2ba",
+        "oklch": "oklch(79.3% 0.029 174)",
+        "tonalRamp": [
+          "#090c0b",
+          "#1e2624",
+          "#35433f",
+          "#4e635c",
+          "#6f867f",
+          "#98a9a4",
+          "#c3cdca",
+          "#ecefee"
+        ]
+      },
+      "label": {
+        "role": "neutral",
+        "displayName": "Label Stock",
+        "canonical": "#f7f7f3",
+        "oklch": "oklch(97.5% 0.005 106)",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#242423",
+          "#40403e",
+          "#5e5e5b",
+          "#80807d",
+          "#a5a5a2",
+          "#cacac9",
+          "#eeeeee"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Label Ink",
+        "canonical": "#152320",
+        "oklch": "oklch(24.2% 0.020 179)",
+        "tonalRamp": [
+          "#0a0c0b",
+          "#202524",
+          "#384240",
+          "#53615e",
+          "#748480",
+          "#9ca8a5",
+          "#c5ccca",
+          "#ecefee"
+        ]
+      },
+      "ink-muted": {
+        "role": "neutral",
+        "displayName": "Muted Ink",
+        "canonical": "#4d5d58",
+        "oklch": "oklch(46.3% 0.021 174)",
+        "tonalRamp": [
+          "#0a0c0b",
+          "#202524",
+          "#38423f",
+          "#53615d",
+          "#74847f",
+          "#9ca8a4",
+          "#c5ccca",
+          "#ecefee"
+        ]
+      },
+      "rule": {
+        "role": "neutral",
+        "displayName": "Label Rule",
+        "canonical": "#dcded6",
+        "oklch": "oklch(89.7% 0.011 118)",
+        "tonalRamp": [
+          "#0b0b0a",
+          "#242422",
+          "#3f403c",
+          "#5d5e58",
+          "#7f817a",
+          "#a4a5a0",
+          "#cacbc8",
+          "#eeeeed"
+        ]
+      },
+      "brass": {
+        "role": "secondary",
+        "displayName": "Provenance Brass",
+        "canonical": "#84651f",
+        "oklch": "oklch(52.5% 0.094 83)",
+        "tonalRamp": [
+          "#0e0b05",
+          "#2c220e",
+          "#4f3d14",
+          "#755918",
+          "#9a7b3a",
+          "#b8a276",
+          "#d6c9b0",
+          "#f3eee4"
+        ]
+      },
+      "brass-mark": {
+        "role": "secondary",
+        "displayName": "Brass Mark",
+        "canonical": "#b08a3e",
+        "oklch": "oklch(65.5% 0.104 82)",
+        "tonalRamp": [
+          "#0e0b05",
+          "#2e220b",
+          "#523c0b",
+          "#785705",
+          "#9e7a2f",
+          "#bba171",
+          "#d8c9ad",
+          "#f4eee3"
+        ]
+      },
+      "vermilion": {
+        "role": "tertiary",
+        "displayName": "Outdated Vermilion",
+        "canonical": "#b3321b",
+        "oklch": "oklch(51.2% 0.169 32)",
+        "tonalRamp": [
+          "#140705",
+          "#3e150e",
+          "#6f2214",
+          "#a42e19",
+          "#d0513a",
+          "#e48876",
+          "#f3bbb0",
+          "#ffe9e4"
+        ]
+      },
+      "vermilion-mark": {
+        "role": "tertiary",
+        "displayName": "Vermilion Mark",
+        "canonical": "#c43c23",
+        "oklch": "oklch(55.3% 0.177 32)",
+        "tonalRamp": [
+          "#150705",
+          "#3f140c",
+          "#712011",
+          "#a62a12",
+          "#d34e35",
+          "#e68773",
+          "#f4bbae",
+          "#ffe9e3"
+        ]
+      },
+      "vermilion-wash": {
+        "role": "tertiary",
+        "displayName": "Vermilion Wash",
+        "canonical": "#fbebe6",
+        "oklch": "oklch(95.1% 0.019 38)",
+        "tonalRamp": [
+          "#0c0b0a",
+          "#272321",
+          "#463e3b",
+          "#675a57",
+          "#8b7d78",
+          "#aca29f",
+          "#cfc9c7",
+          "#f0eeed"
+        ]
+      },
+      "dispute": {
+        "role": "neutral",
+        "displayName": "Disputed Ink",
+        "canonical": "#3c4b47",
+        "oklch": "oklch(39.8% 0.020 177)",
+        "tonalRamp": [
+          "#0a0c0b",
+          "#202524",
+          "#394240",
+          "#53615d",
+          "#748480",
+          "#9ca8a4",
+          "#c5ccca",
+          "#ecefee"
+        ]
+      },
+      "focus": {
+        "role": "neutral",
+        "displayName": "Focus Brass",
+        "canonical": "#e2c77d",
+        "oklch": "oklch(83.6% 0.098 90)",
+        "tonalRamp": [
+          "#0e0b05",
+          "#2b230c",
+          "#4d3e11",
+          "#715b11",
+          "#967d35",
+          "#b5a374",
+          "#d4caaf",
+          "#f2eee4"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "The Knowledge report heading on the wall."
+      },
+      "brand": {
+        "displayName": "Brand",
+        "purpose": "TruthLayer wordmark in the header."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Finding-label headings; widget greeting at 18px and header title at 15px."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Base text for playground and widget."
+      },
+      "body-sm": {
+        "displayName": "Body small",
+        "purpose": "Label summaries, chain rows, fix hints, warn notes, source headings (13-13.5px)."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Status words on labels and the AI status line."
+      },
+      "mono": {
+        "displayName": "Mono",
+        "purpose": "file:line, counts, values, dates, citation numbers, inline code. Tabular numerals."
+      }
+    },
+    "shadows": [
+      {
+        "name": "floating-lift",
+        "value": "0 18px 48px rgba(15, 25, 22, 0.22), 0 3px 10px rgba(15, 25, 22, 0.10)",
+        "purpose": "Widget launcher and bubble panel only (light)."
+      },
+      {
+        "name": "floating-lift-dark",
+        "value": "0 18px 48px rgba(0, 0, 0, 0.55)",
+        "purpose": "Widget launcher and bubble panel only (dark)."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-settle",
+        "value": "cubic-bezier(.16, 1, .3, 1)",
+        "purpose": "Label settle, message rise, launcher lift, panel open, chip slide."
+      },
+      {
+        "name": "settle",
+        "value": "0.35s ease-settle; translateY(6px) to none; opacity 0 to 1",
+        "purpose": "Finding labels entering on a fresh report."
+      },
+      {
+        "name": "rise",
+        "value": "0.3s ease-settle; translateY(6px) to none",
+        "purpose": "Chat messages entering."
+      },
+      {
+        "name": "breathe",
+        "value": "1.6s ease-in-out infinite alternate; opacity .55 to .85",
+        "purpose": "Loading skeleton labels."
+      },
+      {
+        "name": "spin",
+        "value": "0.8s linear infinite",
+        "purpose": "Re-check icon while busy."
+      },
+      {
+        "name": "state-fade",
+        "value": "0.15s",
+        "purpose": "Border, background, colour and opacity state changes."
+      },
+      {
+        "name": "cite-flash",
+        "value": "12% accent tint, removed after 0.9s with a 0.5s fade",
+        "purpose": "Source row highlighted from a citation chip."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "animation: none; transition: none",
+        "purpose": "Applied to everything under prefers-reduced-motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "stack",
+        "value": "980px",
+        "purpose": "Playground stacks to one column; 16px gutters."
+      },
+      {
+        "name": "compact",
+        "value": "560px",
+        "purpose": "Hide product and model names; filter row scrolls with fade; chain ages wrap."
+      },
+      {
+        "name": "widget-full",
+        "value": "480px",
+        "purpose": "Bubble panel spans the viewport with 8px margins."
+      }
+    ],
+    "focus": {
+      "playground": "outline: 2px solid var(--focus); outline-offset: 2px",
+      "widget": "outline: 2px solid var(--tl-ring); outline-offset: 2px (ring = accent; dark = color-mix(in srgb, accent 40%, #fff); on-accent inside the header)"
+    }
+  },
+  "components": [
+    {
+      "name": "Finding Label",
+      "kind": "card",
+      "refersTo": "finding-label",
+      "description": "White label stock carrying one finding: heading, status mark, summary, provenance chain, fix hint.",
+      "html": "<div class=\"ds-wall\"><article class=\"ds-label\"><div class=\"ds-label-head\"><h2>API rate limit (per minute)</h2><span class=\"ds-status ds-err\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><circle cx=\"8\" cy=\"8\" r=\"4.25\" fill=\"none\" stroke=\"#c43c23\" stroke-width=\"1.6\"/><path d=\"M2.5 13.5l11-11\" stroke=\"#c43c23\" stroke-width=\"1.6\" stroke-linecap=\"round\"/></svg>Outdated</span></div><p class=\"ds-summary\">1 page says something different from the source of truth.</p></article></div>",
+      "css": ".ds-wall{background:#1e3a36;padding:20px;font:14.5px/1.55 'Segoe UI Variable Text','Segoe UI',system-ui,sans-serif}.ds-label{background:#f7f7f3;color:#152320;padding:16px 18px 14px;display:flex;flex-direction:column;gap:10px;border:1px solid #35574f}.ds-label-head{display:flex;align-items:baseline;gap:12px}.ds-label h2{margin:0;font-size:15.5px;font-weight:620;line-height:1.35}.ds-status{margin-left:auto;display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;white-space:nowrap}.ds-err{color:#b3321b}.ds-summary{margin:-4px 0 0;color:#4d5d58;font-size:13.5px}"
+    },
+    {
+      "name": "Provenance Chain",
+      "kind": "custom",
+      "description": "Signature: truth rows first, then page rows; outdated value struck in place beside the new one.",
+      "html": "<ul class=\"ds-chain\"><li class=\"ds-truth\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><circle cx=\"8\" cy=\"8\" r=\"4.5\" fill=\"#b08a3e\"/></svg><span><span class=\"ds-path\">openapi.yaml:10</span> <span class=\"ds-role\">· source of truth</span></span><span class=\"ds-age\">today</span><span class=\"ds-said\">x-rate-limit: 200 per minute</span></li><li class=\"ds-out\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><circle cx=\"8\" cy=\"8\" r=\"4.25\" fill=\"none\" stroke=\"#c43c23\" stroke-width=\"1.6\"/><path d=\"M2.5 13.5l11-11\" stroke=\"#c43c23\" stroke-width=\"1.6\" stroke-linecap=\"round\"/></svg><span><span class=\"ds-path\">docs/api/rate-limits.md:3</span> <span class=\"ds-role\">· outdated</span></span><span class=\"ds-age\">today</span><span class=\"ds-said\"><del>100 requests per minute</del><span class=\"ds-arrow\">→</span><b>200 requests per minute</b></span></li></ul>",
+      "css": ".ds-chain{list-style:none;margin:0;padding:0 18px;border-top:1px solid #dcded6;background:#f7f7f3;color:#152320;font:13px/1.55 'Segoe UI Variable Text','Segoe UI',system-ui,sans-serif}.ds-chain li{display:grid;grid-template-columns:16px minmax(0,1fr) auto;gap:2px 10px;align-items:start;padding:8px 0;border-bottom:1px solid #dcded6}.ds-chain svg{margin-top:2px}.ds-path{font-family:ui-monospace,'Cascadia Mono',Consolas,monospace;font-size:12.5px;font-variant-numeric:tabular-nums}.ds-truth .ds-path{color:#84651f;font-weight:600}.ds-out .ds-path{color:#b3321b;font-weight:600}.ds-role,.ds-age{color:#4d5d58}.ds-age{font-size:12px;white-space:nowrap}.ds-said{grid-column:2/4}.ds-said del{color:#b3321b;text-decoration-thickness:1.5px}.ds-said b{font-weight:600}.ds-arrow{color:#4d5d58;margin:0 4px}"
+    },
+    {
+      "name": "Re-check Button",
+      "kind": "button",
+      "refersTo": "button-recheck",
+      "description": "Secondary button on the green wall.",
+      "html": "<div style=\"background:#1e3a36;padding:16px\"><button class=\"ds-recheck\" type=\"button\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M13.5 8a5.5 5.5 0 1 1-1.6-3.9\"/><path d=\"M13.5 2.5v3h-3\"/></svg>Re-check</button></div>",
+      "css": ".ds-recheck{display:inline-flex;align-items:center;gap:7px;height:32px;padding:0 12px;border:1px solid #35574f;border-radius:2px;background:#254641;color:#eef2ee;font:13px 'Segoe UI Variable Text','Segoe UI',system-ui,sans-serif;cursor:pointer;transition:border-color .15s,background .15s}.ds-recheck:hover{border-color:#a9c2ba}.ds-recheck:focus-visible{outline:2px solid #e2c77d;outline-offset:2px}"
+    },
+    {
+      "name": "Filter Tabs",
+      "kind": "nav",
+      "refersTo": "filter-tab",
+      "description": "Text tabs on the wall with mono counts; brass underline marks the selected tab.",
+      "html": "<div class=\"ds-tabs\" role=\"tablist\"><button role=\"tab\" aria-selected=\"true\">All <span class=\"ds-n\">6</span></button><button role=\"tab\" aria-selected=\"false\">Disputed <span class=\"ds-n\">1</span></button><button role=\"tab\" aria-selected=\"false\" disabled>Old pages <span class=\"ds-n\">0</span></button></div>",
+      "css": ".ds-tabs{display:flex;gap:2px;padding:14px 16px 0;background:#1e3a36;border-bottom:1px solid #35574f;font:13.5px 'Segoe UI Variable Text','Segoe UI',system-ui,sans-serif}.ds-tabs button{display:inline-flex;align-items:center;gap:8px;padding:8px 12px 10px;border:0;border-bottom:2px solid transparent;margin-bottom:-1px;background:none;color:#a9c2ba;font:inherit;cursor:pointer}.ds-tabs button:hover{color:#eef2ee}.ds-tabs button[aria-selected=true]{color:#eef2ee;border-bottom-color:#b08a3e}.ds-tabs button:disabled{opacity:.45;cursor:default}.ds-tabs button:focus-visible{outline:2px solid #e2c77d;outline-offset:2px}.ds-n{font-family:ui-monospace,'Cascadia Mono',Consolas,monospace;font-size:12.5px;color:#eef2ee}"
+    },
+    {
+      "name": "Widget Ask Input",
+      "kind": "input",
+      "refersTo": "widget-input",
+      "description": "Widget question field with the accent send button.",
+      "html": "<form class=\"ds-ask\" onsubmit=\"return false\"><textarea rows=\"1\" placeholder=\"Ask a question…\" aria-label=\"Your question\"></textarea><button class=\"ds-send\" type=\"submit\">Ask <svg width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M3 8h10M9 4l4 4-4 4\"/></svg></button></form>",
+      "css": ".ds-ask{display:flex;gap:8px;align-items:flex-end;padding:12px;border-top:1px solid #e0e2da;background:#fbfbf8;font:14.5px/1.55 'Segoe UI Variable Text','Segoe UI',system-ui,sans-serif}.ds-ask textarea{flex:1;resize:none;min-height:42px;font:inherit;color:#152320;background:#fff;border:1px solid #e0e2da;border-radius:2px;padding:9px 12px;outline:none;transition:border-color .15s;caret-color:#1e3a36}.ds-ask textarea::placeholder{color:#55645f}.ds-ask textarea:focus{border-color:#1e3a36}.ds-send{height:42px;padding:0 14px;border:0;border-radius:2px;background:#1e3a36;color:#fff;display:inline-flex;align-items:center;gap:6px;font:600 13.5px 'Segoe UI Variable Text','Segoe UI',system-ui,sans-serif;cursor:pointer;transition:opacity .15s}.ds-send:focus-visible{outline:2px solid #1e3a36;outline-offset:2px}.ds-send:disabled{opacity:.4;cursor:default}"
+    },
+    {
+      "name": "Widget Source Rows",
+      "kind": "custom",
+      "description": "Compact provenance labels under a chat answer, with a citation chip in the answer text.",
+      "html": "<div class=\"ds-ans\"><p>The limit is 200 requests per minute <button class=\"ds-cite\" type=\"button\" aria-label=\"Source 1\">1</button>.</p><ul class=\"ds-src\"><li class=\"ds-t\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><circle cx=\"8\" cy=\"8\" r=\"4.5\" fill=\"#b08a3e\"/></svg><span class=\"ds-num\">1</span><span class=\"ds-h\">Rate limits</span><span class=\"ds-meta\">openapi.yaml:10 · source of truth · updated today</span></li><li><svg width=\"14\" height=\"14\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><circle cx=\"8\" cy=\"8\" r=\"4.25\" fill=\"none\" stroke=\"#55645f\" stroke-width=\"1.6\"/></svg><span class=\"ds-num\">2</span><span class=\"ds-h\">API overview</span><span class=\"ds-meta\">docs/api/index.md:4 · updated 3 months ago</span></li></ul></div>",
+      "css": ".ds-ans{background:#fbfbf8;color:#152320;padding:16px;font:14.5px/1.55 'Segoe UI Variable Text','Segoe UI',system-ui,sans-serif}.ds-ans p{margin:0}.ds-cite{display:inline-grid;place-items:center;min-width:18px;height:18px;padding:0 4px;border-radius:2px;border:0;background:#1e3a36;color:#fff;font:600 11px/1 ui-monospace,'Cascadia Mono',Consolas,monospace;vertical-align:1px;cursor:pointer}.ds-cite:hover{filter:brightness(1.2)}.ds-cite:focus-visible{outline:2px solid #1e3a36;outline-offset:2px}.ds-src{list-style:none;margin:12px 0 0;padding:0;border-top:1px solid #e0e2da}.ds-src li{display:grid;grid-template-columns:14px 18px minmax(0,1fr);gap:1px 8px;align-items:start;padding:8px 2px;border-bottom:1px solid #e0e2da;font-size:12.5px}.ds-src svg{margin-top:2px}.ds-num{font:600 11.5px/18px ui-monospace,'Cascadia Mono',Consolas,monospace;color:#55645f}.ds-h{font-weight:600;font-size:13px}.ds-t .ds-h{color:#84651f}.ds-meta{grid-column:3;color:#55645f;font-family:ui-monospace,'Cascadia Mono',Consolas,monospace;font-size:11.5px}"
+    },
+    {
+      "name": "Known-Problem Note",
+      "kind": "custom",
+      "refersTo": "widget-warn-note",
+      "description": "Vermilion-washed note above sources when a cited source is known to be outdated.",
+      "html": "<div class=\"ds-warn\" role=\"note\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 2.5l6 10.5H2z\"/><path d=\"M8 6.5v3\"/><path d=\"M8 11.4v.1\"/></svg><span>One source still says 100 per minute; the changelog says 200.</span></div>",
+      "css": ".ds-warn{display:flex;gap:9px;align-items:flex-start;background:#fbebe6;color:#a62f19;border:1px solid #f1c7bb;border-radius:2px;padding:9px 11px;font:13px/1.55 'Segoe UI Variable Text','Segoe UI',system-ui,sans-serif}.ds-warn svg{margin-top:1px;flex:none}.ds-warn span{color:#152320}"
+    },
+    {
+      "name": "Widget Launcher",
+      "kind": "button",
+      "refersTo": "widget-launcher",
+      "description": "Floating 54px accent square that opens the bubble panel; the only lifted element besides the panel.",
+      "html": "<button class=\"ds-launch\" type=\"button\" aria-label=\"Open chat\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 16 16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M2.5 3.5h11v7.5H7l-3.5 2.5V11h-1z\"/></svg></button>",
+      "css": ".ds-launch{width:54px;height:54px;border-radius:4px;border:0;background:#1e3a36;color:#fff;box-shadow:0 18px 48px rgba(15,25,22,.22),0 3px 10px rgba(15,25,22,.10);display:grid;place-items:center;cursor:pointer;transition:transform .25s cubic-bezier(.16,1,.3,1)}.ds-launch:hover{transform:translateY(-2px)}.ds-launch:focus-visible{outline:2px solid #1e3a36;outline-offset:2px}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Provenance Label",
+    "overview": "TruthLayer is a museum wall of facts. A deep gallery-green wall carries the header, the chat column and the report heading; every finding and every cited source hangs on it as flat white label stock, square-cornered and packed edge to edge with hairline rules. Each label reads like a provenance record: what the fact says, where it came from (file:line), how old it is, and whether its attribution still holds.\n\nColour does one job per hue. Brass means \"source of truth\" and nothing else; vermilion means \"outdated value\" and nothing else; ink grey carries disputed facts. State is encoded twice, by colour and by mark shape, so it survives colour blindness and greyscale. The system is dense and operational: the playground sits next to an editor while a team fixes docs, so labels are compact, rules are 1px, and motion is a single short settle.\n\nThe widget is the same world folded into a shadow DOM: the label-stock panel, the square corners, the brass truth dot and the provenance-style source rows travel with it, while its header, user bubbles, citation chips and send button take the host's `accent` (default: the wall green) so it feels native on any site, light or dark.",
+    "keyCharacteristics": [
+      "Gallery-green wall, white label stock, 1px hairline rules between labels instead of gaps or shadows.",
+      "Square 2px corners everywhere; 4px only on floating widget chrome.",
+      "One colour, one job: brass = truth, vermilion = outdated, ink grey = disputed.",
+      "State by mark shape: solid dot, struck ring, half-filled ring, barred ring, plain ring.",
+      "Change shown in place: old value struck through, arrow, new value in bold.",
+      "Tabular monospace only for file:line, values, counts and dates.",
+      "System font stack only; no web fonts, no external requests."
+    ],
+    "rules": [
+      {
+        "name": "The One Colour, One Job Rule",
+        "body": "Brass marks a source of truth and vermilion marks an outdated value. Neither is used for decoration, branding, hover, or any other state.",
+        "section": "colors"
+      },
+      {
+        "name": "The Shape Carries State Rule",
+        "body": "Every status colour is paired with a mark shape: solid dot = truth, struck ring = outdated, half-filled ring = disputed, barred ring = other warnings, plain ring = ordinary page. Never signal state by colour alone.",
+        "section": "colors"
+      },
+      {
+        "name": "The Host Accent Rule",
+        "body": "Inside the widget, only chrome (header, user bubble, citation chip, send, launcher, focus ring) takes `--tl-accent`. Text on the accent is picked automatically between `#ffffff` and `ink` by contrast. Truth and warning colours never follow the host accent.",
+        "section": "colors"
+      },
+      {
+        "name": "The Catalogue Number Rule",
+        "body": "Monospace is reserved for file:line, values, counts and dates. Headings, prose and buttons stay in the sans.",
+        "section": "typography"
+      },
+      {
+        "name": "The Hung-Flat Rule",
+        "body": "Labels on the wall never get shadows or gaps; they are separated by 1px wall-line gutters. Shadow exists only on widget chrome that floats over a host site.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** separate labels with 1px `wall-line` gutters, never gaps or shadows.",
+      "**Do** pair every status colour with its mark shape (solid dot, struck ring, half-filled ring, barred ring, plain ring).",
+      "**Do** show a changed value in place: struck old value, arrow, bold new value.",
+      "**Do** put file:line, counts, values and dates in tabular monospace, and nothing else.",
+      "**Do** keep corners at 2px; use 4px only for floating widget chrome.",
+      "**Do** let widget chrome follow `--tl-accent` and compute on-accent text by contrast."
+    ],
+    "donts": [
+      "**Don't** use brass or vermilion for anything other than truth and outdated values.",
+      "**Don't** use soft rounded cards, pill badges or an indigo accent; this world is square label stock on a green wall.",
+      "**Don't** add shadows on the playground wall; only the floating widget lifts.",
+      "**Don't** load web fonts or external assets; the system font stacks are the type.",
+      "**Don't** reserve the half-filled mark for anything but disputed facts."
+    ]
+  }
+}

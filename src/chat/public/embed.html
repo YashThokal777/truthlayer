@@ -3,25 +3,58 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Widget Demo</title>
+  <title>Widget demo · TruthLayer</title>
   <style>
-    :root { --bg: #ffffff; --text: #14161a; --muted: #646b77; --border: #e3e6ea; --code: #f6f7f9; }
-    @media (prefers-color-scheme: dark) { :root { --bg: #0e1014; --text: #eceef2; --muted: #9aa1ad; --border: #2c3039; --code: #1d2027; } }
-    body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.6 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif; }
-    main { max-width: 680px; margin: 0 auto; padding: 48px 16px; }
-    h1 { margin: 0 0 8px; letter-spacing: -.02em; }
-    p { color: var(--muted); }
-    pre { background: var(--code); border: 1px solid var(--border); border-radius: 12px; padding: 14px; overflow-x: auto; font-size: 13.5px; }
+    :root {
+      --bg: #ffffff; --text: #16181d; --muted: #5b616d; --rule: #e4e6ea; --code: #f5f6f8; --host: #0f766e;
+      --mono: ui-monospace, "Cascadia Mono", "SF Mono", Menlo, Consolas, monospace;
+      color-scheme: light;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg: #0f1114; --text: #eceef2; --muted: #a0a6b1; --rule: #2a2e36; --code: #181b20; --host: #2dd4bf; color-scheme: dark; }
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.65 "Segoe UI Variable Text", "Segoe UI", -apple-system, system-ui, Roboto, Arial, sans-serif; }
+    ::selection { background: color-mix(in srgb, var(--host) 30%, transparent); }
+    .site { display: flex; align-items: center; gap: 28px; padding: 0 24px; height: 60px; border-bottom: 1px solid var(--rule); }
+    .site b { font-size: 17px; letter-spacing: -.01em; }
+    .site nav { display: flex; gap: 20px; font-size: 14.5px; color: var(--muted); }
+    .demo-tag { margin-left: auto; font-size: 12.5px; color: var(--muted); }
+    main { max-width: 680px; margin: 0 auto; padding: 56px 16px 120px; }
+    h1 { margin: 0 0 12px; font-size: clamp(28px, 4vw, 38px); line-height: 1.15; letter-spacing: -.02em; text-wrap: balance; }
+    p { color: var(--muted); margin: 0 0 16px; }
+    h2 { font-size: 18px; margin: 40px 0 8px; }
+    pre { background: var(--code); border: 1px solid var(--rule); border-radius: 4px; padding: 14px 16px; overflow-x: auto; font: 13.5px/1.6 var(--mono); }
+    code { font-family: var(--mono); font-size: .9em; }
+    p code { background: var(--code); border: 1px solid var(--rule); padding: 1px 5px; border-radius: 3px; }
+    table { width: 100%; border-collapse: collapse; font-size: 14.5px; }
+    th, td { text-align: left; padding: 9px 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+    th { font-weight: 600; } td:first-child { width: 120px; }
+    @media (max-width: 560px) { .site nav { display: none; } }
   </style>
 </head>
 <body>
+  <header class="site">
+    <b>Acme</b>
+    <nav aria-label="Sample site"><span>Product</span><span>Pricing</span><span>Docs</span></nav>
+    <span class="demo-tag">Sample site for the widget demo</span>
+  </header>
   <main>
-    <h1>Your product website</h1>
-    <p>This page shows how the chat widget looks on a normal website. Click the round button in the bottom-right corner.</p>
-    <p>Add it to any page with two lines:</p>
+    <h1>This is what the chat looks like on your website</h1>
+    <p>Pretend this is your product's site. The chat button sits in the bottom-right corner. Click it and ask something.</p>
+
+    <h2>Add it with two lines</h2>
     <pre><code>&lt;script src="https://YOUR-SERVER/widget.js"&gt;&lt;/script&gt;
-&lt;truthlayer-chat endpoint="https://YOUR-SERVER"&gt;&lt;/truthlayer-chat&gt;</code></pre>
-    <p>Change the color with <code>accent="#0f766e"</code>.</p>
+&lt;truthlayer-chat endpoint="https://YOUR-SERVER" accent="#0f766e"&gt;&lt;/truthlayer-chat&gt;</code></pre>
+
+    <h2>Make it yours</h2>
+    <table>
+      <tr><th>Attribute</th><th>What it does</th></tr>
+      <tr><td><code>accent</code></td><td>Your brand color. This demo uses teal: <code>#0f766e</code>.</td></tr>
+      <tr><td><code>mode</code></td><td><code>bubble</code> (floating button) or <code>inline</code> (fills a box on the page).</td></tr>
+      <tr><td><code>title</code></td><td>The name in the chat header.</td></tr>
+      <tr><td><code>theme</code></td><td><code>light</code> or <code>dark</code>. By default it follows the visitor's system setting.</td></tr>
+    </table>
   </main>
   <script src="/widget.js"></script>
   <truthlayer-chat accent="#0f766e"></truthlayer-chat>

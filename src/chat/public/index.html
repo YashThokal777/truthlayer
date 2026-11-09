@@ -6,147 +6,270 @@
   <title>TruthLayer Playground</title>
   <style>
     :root {
-      --bg: #f3f4f6; --panel: #ffffff; --text: #14161a; --muted: #646b77; --border: #e3e6ea;
-      --accent: #4f46e5; --red: #c4302b; --red-bg: #fdecea; --yellow: #8a5a00; --yellow-bg: #fff4d6;
-      --green: #12805c; --green-bg: #e3f6ee; --gray-bg: #eef0f3; --code: #f6f7f9;
+      --wall: #1e3a36; --wall-raised: #254641; --wall-line: #35574f;
+      --on-wall: #eef2ee; --on-wall-muted: #a9c2ba;
+      --label: #f7f7f3; --ink: #152320; --ink-muted: #4d5d58; --rule: #dcded6;
+      --brass: #84651f; --brass-mark: #b08a3e;
+      --verm: #b3321b; --verm-mark: #c43c23; --verm-wash: #fbebe6;
+      --dispute: #3c4b47;
+      --focus: #e2c77d;
+      --mono: ui-monospace, "Cascadia Mono", "SF Mono", Menlo, Consolas, monospace;
+      --sans: "Segoe UI Variable Text", "Segoe UI", -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", Arial, sans-serif;
       color-scheme: light;
     }
     @media (prefers-color-scheme: dark) {
       :root {
-        --bg: #0e1014; --panel: #15171c; --text: #eceef2; --muted: #9aa1ad; --border: #2c3039;
-        --red: #ff7b72; --red-bg: #3a1a1a; --yellow: #f5c66b; --yellow-bg: #33280f;
-        --green: #4fd1a1; --green-bg: #12302a; --gray-bg: #22252d; --code: #1d2027;
+        --wall: #132622; --wall-raised: #1a312c; --wall-line: #2a453f;
+        --on-wall: #e6ede8; --on-wall-muted: #93ada5;
+        --label: #1b2c28; --ink: #e6ede8; --ink-muted: #a2b5ae; --rule: #2d433d;
+        --brass: #d6b66d; --brass-mark: #c9a557;
+        --verm: #ff8f75; --verm-mark: #f0694d; --verm-wash: #3a211b;
+        --dispute: #c9d4cf;
         color-scheme: dark;
       }
     }
     * { box-sizing: border-box; }
-    body { margin: 0; background: var(--bg); color: var(--text); font: 14.5px/1.55 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif; }
-    header.top { display: flex; align-items: center; gap: 12px; padding: 14px 24px; border-bottom: 1px solid var(--border); background: var(--panel); }
-    .logo { width: 32px; height: 32px; border-radius: 10px; background: var(--accent); color: #fff; display: grid; place-items: center; }
-    .brand { font-weight: 700; letter-spacing: -.01em; }
-    .brand small { display: block; font-weight: 400; color: var(--muted); font-size: 12.5px; letter-spacing: 0; }
-    .pill { margin-left: auto; font-size: 12.5px; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--border); color: var(--muted); white-space: nowrap; }
-    .pill.on { color: var(--green); background: var(--green-bg); border-color: transparent; }
-    .pill.off { color: var(--yellow); background: var(--yellow-bg); border-color: transparent; }
+    html, body { height: 100%; }
+    body { margin: 0; background: var(--wall); color: var(--on-wall); font: 14.5px/1.55 var(--sans); -webkit-font-smoothing: antialiased; }
+    ::selection { background: var(--focus); color: #152320; }
+    :focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+    * { scrollbar-width: thin; scrollbar-color: var(--wall-line) transparent; }
+    .num, code, .path { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+    svg.i { width: 16px; height: 16px; flex: none; }
 
-    main { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 20px; padding: 20px 24px; height: calc(100vh - 61px); }
-    .card { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; min-height: 0; display: flex; flex-direction: column; }
-    truthlayer-chat { flex: 1; min-height: 0; }
-    .chat-card { border: 0; background: transparent; }
+    /* Header */
+    .bar { height: 56px; display: flex; align-items: center; gap: 14px; padding: 0 24px; border-bottom: 1px solid var(--wall-line); }
+    .seal { width: 28px; height: 28px; display: grid; place-items: center; border: 1.5px solid var(--brass-mark); border-radius: 2px; color: var(--brass-mark); }
+    .brand { font-weight: 650; font-size: 16px; letter-spacing: .005em; }
+    .product { color: var(--on-wall-muted); font-size: 13.5px; padding-left: 14px; border-left: 1px solid var(--wall-line); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .ai { margin-left: auto; display: inline-flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--on-wall-muted); white-space: nowrap; }
+    .ai .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--on-wall-muted); }
+    .ai.on .dot { background: #6fcf9f; } .ai.off .dot { background: var(--brass-mark); }
+    .ai b { font-weight: 500; color: var(--on-wall); }
 
-    .report-head { display: flex; align-items: center; gap: 10px; padding: 16px 18px 6px; }
-    .report-head h2 { margin: 0; font-size: 16px; }
-    .refresh { margin-left: auto; border: 1px solid var(--border); background: var(--panel); color: var(--text); border-radius: 9px; padding: 6px 12px; font: inherit; font-size: 13px; cursor: pointer; }
-    .refresh:hover { border-color: var(--accent); }
-    .scan { color: var(--muted); font-size: 12.5px; padding: 0 18px 12px; }
-    .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; padding: 0 18px 14px; }
-    .stat { border-radius: 12px; padding: 10px 12px; background: var(--gray-bg); }
-    .stat b { display: block; font-size: 22px; line-height: 1.2; font-variant-numeric: tabular-nums; }
-    .stat span { font-size: 12px; color: var(--muted); }
-    .stat.bad b { color: var(--red); } .stat.warn b { color: var(--yellow); } .stat.good b { color: var(--green); }
-    .findings { overflow-y: auto; padding: 0 18px 18px; display: grid; gap: 10px; align-content: start; }
-    .finding { border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; }
-    .finding .top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-    .badge { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; padding: 2px 8px; border-radius: 999px; }
-    .badge.error { color: var(--red); background: var(--red-bg); }
-    .badge.warning { color: var(--yellow); background: var(--yellow-bg); }
-    .badge.info { color: var(--muted); background: var(--gray-bg); }
-    .finding h3 { margin: 0; font-size: 14px; }
-    .finding p { margin: 6px 0 8px; color: var(--muted); font-size: 13px; }
-    .row { display: grid; grid-template-columns: 18px minmax(0, 1fr); gap: 2px 8px; padding: 6px 0; border-top: 1px dashed var(--border); font-size: 13px; }
-    .row .ico { font-weight: 700; }
-    .row.truth .ico { color: var(--green); } .row.outdated .ico { color: var(--red); } .row .ico { color: var(--yellow); }
-    .row code { font: 12px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; background: var(--code); padding: 1px 5px; border-radius: 5px; overflow-wrap: anywhere; }
-    .row .age { color: var(--muted); font-size: 12px; }
-    .hint { font-size: 12.5px; color: var(--muted); margin-top: 6px; }
-    .clean { text-align: center; padding: 40px 20px; color: var(--muted); }
-    .clean b { display: block; color: var(--green); font-size: 16px; margin-bottom: 4px; }
+    /* Layout */
+    main { display: grid; grid-template-columns: minmax(360px, 2fr) minmax(0, 3fr); height: calc(100% - 56px); }
+    .chat { padding: 20px 20px 20px 24px; border-right: 1px solid var(--wall-line); min-height: 0; }
+    truthlayer-chat { height: 100%; --tl-accent: var(--wall-raised); }
+    .report { display: flex; flex-direction: column; min-height: 0; }
 
-    @media (max-width: 960px) {
-      main { grid-template-columns: 1fr; height: auto; padding: 16px; }
-      .chat-card { height: 72vh; }
-      .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      header.top { padding: 12px 16px; }
+    .report-head { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 16px; padding: 20px 24px 0; }
+    .report-head h1 { margin: 0; font-size: 19px; font-weight: 620; letter-spacing: -.005em; }
+    .scan { color: var(--on-wall-muted); font-size: 13px; }
+    .recheck { margin-left: auto; display: inline-flex; align-items: center; gap: 7px; height: 32px; padding: 0 12px; border: 1px solid var(--wall-line); border-radius: 2px; background: var(--wall-raised); color: var(--on-wall); font: inherit; font-size: 13px; cursor: pointer; transition: border-color .15s, background .15s; }
+    .recheck:hover { border-color: var(--on-wall-muted); }
+    .recheck[aria-busy="true"] svg { animation: spin .8s linear infinite; }
+
+    .filters { display: flex; gap: 2px; padding: 14px 24px 0; border-bottom: 1px solid var(--wall-line); overflow-x: auto; }
+    .filters button { display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px 10px; border: 0; border-bottom: 2px solid transparent; margin-bottom: -1px; background: none; color: var(--on-wall-muted); font: inherit; font-size: 13.5px; cursor: pointer; white-space: nowrap; }
+    .filters button:hover { color: var(--on-wall); }
+    .filters button[aria-selected="true"] { color: var(--on-wall); border-bottom-color: var(--brass-mark); }
+    .filters .num { font-size: 12.5px; color: var(--on-wall); }
+    .filters .num.bad { color: #ff9f88; }
+    .filters button:disabled { opacity: .45; cursor: default; }
+
+    .wall { flex: 1; min-height: 0; overflow-y: auto; padding: 20px 24px 28px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 1px; background: var(--wall-line); border: 1px solid var(--wall-line); }
+
+    /* Finding label */
+    .label { background: var(--label); color: var(--ink); padding: 16px 18px 14px; display: flex; flex-direction: column; gap: 10px; }
+    .label-head { display: flex; align-items: baseline; gap: 12px; }
+    .label h2 { margin: 0; font-size: 15.5px; font-weight: 620; line-height: 1.35; overflow-wrap: anywhere; }
+    .status { margin-left: auto; display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 600; white-space: nowrap; }
+    .status.error { color: var(--verm); } .status.warning { color: var(--dispute); } .status.info { color: var(--ink-muted); }
+    .summary { margin: -4px 0 0; color: var(--ink-muted); font-size: 13.5px; }
+    .chain { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule); }
+    .chain li { display: grid; grid-template-columns: 16px minmax(0, 1fr) auto; gap: 2px 10px; align-items: start; padding: 8px 0; border-bottom: 1px solid var(--rule); font-size: 13px; }
+    .chain .mk { margin-top: 2px; }
+    .chain .path { font-size: 12.5px; overflow-wrap: anywhere; }
+    .chain .role { color: var(--ink-muted); }
+    .chain .age { font-size: 12px; color: var(--ink-muted); white-space: nowrap; }
+    .chain .said { grid-column: 2 / 4; color: var(--ink); overflow-wrap: anywhere; }
+    .chain .truth .path { color: var(--brass); font-weight: 600; }
+    .chain .outdated .path { color: var(--verm); font-weight: 600; }
+    .chain del { color: var(--verm); text-decoration-thickness: 1.5px; }
+    .chain .to { color: var(--ink); font-weight: 600; }
+    .chain .arrow { color: var(--ink-muted); margin: 0 4px; }
+    .fix { display: flex; gap: 8px; font-size: 13px; color: var(--ink); }
+    .fix svg { margin-top: 2px; color: var(--ink-muted); }
+
+    .note { color: var(--on-wall-muted); font-size: 13px; margin: 14px 2px 0; }
+    .state { background: var(--label); color: var(--ink); padding: 40px 24px; text-align: center; }
+    .state h2 { margin: 10px 0 4px; font-size: 17px; font-weight: 620; }
+    .state p { margin: 0; color: var(--ink-muted); }
+    .state .seal-lg { width: 44px; height: 44px; margin: 0 auto; display: grid; place-items: center; border: 2px solid var(--brass-mark); color: var(--brass-mark); border-radius: 2px; }
+    .skeleton { height: 150px; background: var(--label); animation: breathe 1.6s ease-in-out infinite alternate; }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes breathe { from { opacity: .55; } to { opacity: .85; } }
+    @keyframes settle { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+    .grid.fresh .label { animation: settle .35s cubic-bezier(.16, 1, .3, 1) both; }
+    @media (prefers-reduced-motion: reduce) { *, *::after { animation: none !important; transition: none !important; } }
+
+    @media (max-width: 980px) {
+      html, body { height: auto; }
+      main { grid-template-columns: minmax(0, 1fr); height: auto; }
+      .chat { height: 78vh; min-height: 520px; padding: 16px; border-right: 0; border-bottom: 1px solid var(--wall-line); }
+      .report-head, .filters { padding-left: 16px; padding-right: 16px; }
+      .wall { padding: 16px; }
+      .grid { grid-template-columns: minmax(0, 1fr); }
+      .bar { padding: 0 16px; }
+    }
+    @media (max-width: 560px) {
+      .report-head h1 { flex: 1; }
+      .scan { order: 3; flex-basis: 100%; }
+      .filters { scroll-padding-inline: 16px; mask-image: linear-gradient(90deg, #000 85%, transparent); -webkit-mask-image: linear-gradient(90deg, #000 85%, transparent); padding-right: 40px; }
+      .product { display: none; }
+      .ai b { display: none; }
+      .chain li { grid-template-columns: 16px minmax(0, 1fr); }
+      .chain .age { grid-column: 2; }
     }
   </style>
 </head>
 <body>
-  <header class="top">
-    <div class="logo" aria-hidden="true">
-      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 8.2-7 10-4-1.8-7-5.5-7-10V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg>
-    </div>
-    <div class="brand">TruthLayer <small id="product">Playground</small></div>
-    <span class="pill" id="ai">Checking AI…</span>
+  <header class="bar">
+    <span class="seal" aria-hidden="true"><svg class="i" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.3l2.8 2.7 6.2-6.3"/></svg></span>
+    <span class="brand">TruthLayer</span>
+    <span class="product" id="product">Playground</span>
+    <span class="ai" id="ai"><span class="dot"></span><span id="ai-text">Checking AI…</span></span>
   </header>
 
   <main>
-    <section class="card chat-card" aria-label="Chat">
+    <section class="chat" aria-label="Chat">
       <truthlayer-chat mode="inline"></truthlayer-chat>
     </section>
 
-    <section class="card" aria-label="Knowledge report">
+    <section class="report" aria-labelledby="report-title">
       <div class="report-head">
-        <h2>Knowledge report</h2>
-        <button class="refresh" id="refresh" type="button">Re-check</button>
+        <h1 id="report-title">Knowledge report</h1>
+        <span class="scan" id="scan">Reading your docs…</span>
+        <button class="recheck" id="refresh" type="button">
+          <svg class="i" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.5 8a5.5 5.5 0 1 1-1.6-3.9"/><path d="M13.5 2.5v3h-3"/></svg>
+          Re-check
+        </button>
       </div>
-      <div class="scan" id="scan">Loading…</div>
-      <div class="stats" id="stats"></div>
-      <div class="findings" id="findings"></div>
+      <div class="filters" role="tablist" aria-label="Filter findings" id="filters"></div>
+      <div class="wall" id="wall" role="tabpanel">
+        <div class="grid"><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div></div>
+      </div>
     </section>
   </main>
 
   <script src="/widget.js"></script>
   <script>
     const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
-    const BADGES = { stale: 'Outdated', removed_endpoint: 'Removed endpoint', conflict: 'Conflict', deprecated_endpoint: 'Deprecated', unknown_endpoint: 'Unknown endpoint', old_page: 'Old page' };
-    const ICONS = { truth: '✓', outdated: '✗', conflict: '•', warning: '•', old: '•' };
-    const ROLES = { truth: 'source of truth', outdated: 'outdated', conflict: 'says', warning: 'mentions', old: 'last updated' };
+    const STATUS = { stale: 'Outdated', removed_endpoint: 'Removed', conflict: 'Disputed', deprecated_endpoint: 'Deprecated', unknown_endpoint: 'Not in spec', old_page: 'Old page' };
+    const ROLE = { truth: 'source of truth', outdated: 'outdated', conflict: 'says', warning: 'mentions', old: 'last updated' };
+    const GROUPS = [
+      { id: 'all', label: 'All', types: null },
+      { id: 'outdated', label: 'Outdated', types: ['stale', 'removed_endpoint'] },
+      { id: 'conflicts', label: 'Disputed', types: ['conflict'] },
+      { id: 'endpoints', label: 'Endpoints', types: ['deprecated_endpoint', 'unknown_endpoint'] },
+      { id: 'old', label: 'Old pages', types: ['old_page'] },
+    ];
+    // Marks encode state by shape as well as colour: solid = truth, struck ring = outdated, half = disputed.
+    const MARK = {
+      truth: '<svg class="i mk" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="4.5" fill="var(--brass-mark)"/></svg>',
+      outdated: '<svg class="i mk" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="4.25" fill="none" stroke="var(--verm-mark)" stroke-width="1.6"/><path d="M2.5 13.5l11-11" stroke="var(--verm-mark)" stroke-width="1.6" stroke-linecap="round"/></svg>',
+      disputed: '<svg class="i mk" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="4.25" fill="none" stroke="var(--dispute)" stroke-width="1.6"/><path d="M8 3.75a4.25 4.25 0 0 1 0 8.5z" fill="var(--dispute)"/></svg>',
+      caution: '<svg class="i mk" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="4.25" fill="none" stroke="var(--dispute)" stroke-width="1.6"/><path d="M5.5 8h5" stroke="var(--dispute)" stroke-width="1.6" stroke-linecap="round"/></svg>',
+      plain: '<svg class="i mk" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="4.25" fill="none" stroke="var(--ink-muted)" stroke-width="1.6"/></svg>',
+    };
+    // Half-filled is reserved for disputed facts; other warnings (deprecated, not in spec) get a barred ring.
+    const statusMark = (f) => f.severity === 'error' ? MARK.outdated : f.type === 'conflict' ? MARK.disputed : f.severity === 'warning' ? MARK.caution : MARK.plain;
+    const markFor = (role, f) => role === 'truth' ? MARK.truth : role === 'outdated' ? MARK.outdated : f.type === 'conflict' ? MARK.disputed : MARK.plain;
+    const ARROW = '<svg class="i" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>';
+    const SEAL = '<svg width="22" height="22" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8.3l2.8 2.7 6.2-6.3"/></svg>';
     const ago = (iso) => {
       if (!iso) return '';
       const d = Math.floor((Date.now() - new Date(iso)) / 86400000);
-      return d <= 0 ? 'today' : d === 1 ? '1 day ago' : d < 45 ? `${d} days ago` : `${Math.round(d / 30)} months ago`;
+      return d <= 0 ? 'today' : d === 1 ? 'yesterday' : d < 45 ? `${d} days ago` : d < 540 ? `${Math.round(d / 30)} months ago` : `${Math.round(d / 365)} years ago`;
     };
+
+    let report = null;
+    let filter = 'all';
 
     async function loadInfo() {
       const info = await (await fetch('/api/info')).json();
       document.getElementById('product').textContent = info.name;
       document.title = `${info.name} · TruthLayer`;
-      const pill = document.getElementById('ai');
-      pill.className = `pill ${info.llm ? 'on' : 'off'}`;
-      pill.textContent = info.llm ? `AI on · ${info.model}` : 'Search-only · no API key';
+      const ai = document.getElementById('ai');
+      ai.className = `ai ${info.llm ? 'on' : 'off'}`;
+      document.getElementById('ai-text').innerHTML = info.llm ? `AI on <b>· ${esc(info.model)}</b>` : 'Search only <b>· no API key</b>';
+    }
+
+    function renderFilters() {
+      const counts = Object.fromEntries(GROUPS.map((g) => [g.id, report.findings.filter((f) => !g.types || g.types.includes(f.type)).length]));
+      document.getElementById('filters').innerHTML = GROUPS.map((g) => `
+        <button type="button" role="tab" data-id="${g.id}" aria-selected="${filter === g.id}" ${counts[g.id] || g.id === 'all' ? '' : 'disabled'}>
+          ${g.label} <span class="num ${g.id === 'outdated' && counts[g.id] ? 'bad' : ''}">${counts[g.id]}</span>
+        </button>`).join('');
+    }
+
+    function chainRow(i, f, fixTo) {
+      const said = i.role === 'outdated' && fixTo
+        ? `<del>${esc(i.raw)}</del><span class="arrow">→</span><span class="to">${esc(fixTo)}</span>`
+        : esc(i.raw);
+      return `<li class="${i.role}">
+        ${markFor(i.role, f)}
+        <span><span class="path">${esc(i.file)}:${i.line}</span> <span class="role">· ${ROLE[i.role] ?? i.role}${i.note ? `, ${esc(i.note)}` : ''}</span></span>
+        <span class="age">${ago(i.date)}</span>
+        ${i.raw ? `<span class="said">${said}</span>` : ''}
+      </li>`;
+    }
+
+    function renderLabel(f) {
+      const truths = f.items.filter((i) => i.role === 'truth');
+      const ref = f.type === 'stale' ? (truths.find((t) => t.type === 'changelog') ?? truths[0]) : null;
+      const rows = f.type === 'old_page' ? '' : `<ul class="chain">${f.items.map((i) => chainRow(i, f, ref?.raw)).join('')}</ul>`;
+      return `<article class="label">
+        <div class="label-head"><h2>${esc(f.title)}</h2><span class="status ${f.severity}">${statusMark(f)}${STATUS[f.type] ?? f.type}</span></div>
+        <p class="summary">${esc(f.summary)}</p>
+        ${rows}
+        ${f.hint ? `<div class="fix">${ARROW}<span>${esc(f.hint)}</span></div>` : ''}
+      </article>`;
+    }
+
+    function renderWall(fresh) {
+      const wall = document.getElementById('wall');
+      const group = GROUPS.find((g) => g.id === filter);
+      const list = report.findings.filter((f) => !group.types || group.types.includes(f.type));
+      if (!report.findings.length) {
+        wall.innerHTML = `<div class="grid"><div class="state"><div class="seal-lg">${SEAL}</div><h2>Everything checks out</h2><p>No outdated or conflicting facts. Your docs and your assistant agree.</p></div></div>`;
+        return;
+      }
+      wall.innerHTML = `<div class="grid${fresh ? ' fresh' : ''}">${list.map(renderLabel).join('')}</div>`;
     }
 
     async function loadReport() {
-      const r = await (await fetch('/api/report')).json();
-      const s = r.summary;
-      document.getElementById('scan').textContent =
-        `Scanned ${s.pages} pages, ${s.specs} OpenAPI spec${s.specs === 1 ? '' : 's'}, ${s.changelogs} changelog${s.changelogs === 1 ? '' : 's'} · ${s.facts} facts`;
-      const tile = (n, label, kind) => `<div class="stat ${n ? kind : 'good'}"><b>${n}</b><span>${label}</span></div>`;
-      document.getElementById('stats').innerHTML =
-        tile(s.outdated, 'Outdated', 'bad') + tile(s.conflicts, 'Conflicts', 'bad') +
-        tile(s.endpointWarnings, 'Endpoint warnings', 'warn') + tile(s.oldPages, 'Old pages', 'warn');
-      const list = document.getElementById('findings');
-      if (!r.findings.length) {
-        list.innerHTML = '<div class="clean"><b>✓ Everything is in sync</b>No outdated or conflicting facts found.</div>';
-        return;
+      const btn = document.getElementById('refresh');
+      btn.setAttribute('aria-busy', 'true');
+      try {
+        report = await (await fetch('/api/report')).json();
+        const s = report.summary;
+        document.getElementById('scan').textContent =
+          `${s.pages} pages · ${s.specs} spec${s.specs === 1 ? '' : 's'} · ${s.changelogs} changelog${s.changelogs === 1 ? '' : 's'} · ${s.facts} facts checked`;
+        if (!report.findings.some((f) => (GROUPS.find((g) => g.id === filter).types ?? [f.type]).includes(f.type))) filter = 'all';
+        renderFilters();
+        renderWall(true);
+      } catch (e) {
+        document.getElementById('scan').textContent = '';
+        document.getElementById('wall').innerHTML = `<div class="grid"><div class="state"><h2>Couldn't load the report</h2><p>${esc(e.message)}. Is <code>truthlayer dev</code> still running?</p></div></div>`;
+      } finally {
+        btn.removeAttribute('aria-busy');
       }
-      list.innerHTML = r.findings.map((f) => `
-        <article class="finding">
-          <div class="top"><span class="badge ${f.severity}">${BADGES[f.type]}</span><h3>${esc(f.title)}</h3></div>
-          <p>${esc(f.summary)}</p>
-          ${f.type === 'old_page' ? '' : f.items.map((i) => `
-            <div class="row ${i.role}">
-              <span class="ico" aria-hidden="true">${ICONS[i.role] ?? '•'}</span>
-              <span><code>${esc(i.file)}:${i.line}</code> ${esc(i.raw)}
-                <span class="age">· ${ROLES[i.role] ?? ''}${i.note ? ` (${esc(i.note)})` : ''} · ${ago(i.date)}</span></span>
-            </div>`).join('')}
-          ${f.hint ? `<div class="hint">→ ${esc(f.hint)}</div>` : ''}
-        </article>`).join('');
     }
 
+    document.getElementById('filters').addEventListener('click', (e) => {
+      const b = e.target.closest('button[data-id]');
+      if (!b || b.disabled) return;
+      filter = b.dataset.id;
+      renderFilters();
+      renderWall(false);
+    });
     document.getElementById('refresh').addEventListener('click', loadReport);
-    loadInfo().catch(() => {});
-    loadReport().catch((e) => (document.getElementById('scan').textContent = `Could not load the report: ${e.message}`));
+    loadInfo().catch(() => { document.getElementById('ai-text').textContent = 'AI status unknown'; });
+    loadReport();
   </script>
 </body>
 </html>

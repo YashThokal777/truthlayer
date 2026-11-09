@@ -4,3 +4,9 @@ node_modules/
 *.log
 .DS_Store
 .truthlayer/
+
+# Impeccable design tool working files
+.impeccable/questions/
+.impeccable/review/
+.impeccable/mocks/
+.impeccable/config.local.json
