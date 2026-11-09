@@ -1,0 +1,71 @@
+openapi: 3.0.3
+info:
+  title: Acme API
+  version: 2.0.0
+  description: |
+    The Acme API lets you manage users, projects and data exports.
+    Every API key can make 200 requests per minute.
+servers:
+  - url: https://api.acme.dev/v1
+x-rate-limit:
+  limit: 200
+  period: minute
+paths:
+  /users:
+    get:
+      summary: List users
+      parameters:
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: A page of users.
+  /users/{userId}:
+    get:
+      summary: Get a user
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: One user.
+  /projects:
+    get:
+      summary: List projects
+      parameters:
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: A page of projects.
+    post:
+      summary: Create a project
+      responses:
+        '201':
+          description: The new project.
+  /exports:
+    post:
+      summary: Start a data export (old)
+      deprecated: true
+      description: Use the export jobs endpoint instead.
+      responses:
+        '202':
+          description: Export started.
+  /exports/jobs:
+    post:
+      summary: Start an export job as CSV, PDF or Excel
+      responses:
+        '202':
+          description: Export job started.
+components:
+  parameters:
+    Limit:
+      name: limit
+      in: query
+      description: How many items to return.
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20

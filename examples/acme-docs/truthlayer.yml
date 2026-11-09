@@ -1,0 +1,23 @@
+# TruthLayer config for the "Acme" example product.
+# This example has a few outdated and conflicting facts on purpose.
+name: Acme Assistant
+
+sources:
+  - type: markdown
+    path: ./docs
+  - type: openapi        # source of truth for endpoints, rate limits, pagination
+    path: ./openapi.yaml
+  - type: changelog      # source of truth for what changed and when
+    path: ./CHANGELOG.md
+
+check:
+  stale_after_days: 180
+  fail_on: never         # never | error | warning
+  ignore_paths: []
+
+assistant:
+  provider: gemini       # gemini | groq | ollama | custom — key: GEMINI_API_KEY in .env
+  suggestions:
+    - What is the API rate limit?
+    - How many projects does the Free plan include?
+    - How do I export my data?

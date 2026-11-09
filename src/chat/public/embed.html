@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Widget Demo</title>
+  <style>
+    :root { --bg: #ffffff; --text: #14161a; --muted: #646b77; --border: #e3e6ea; --code: #f6f7f9; }
+    @media (prefers-color-scheme: dark) { :root { --bg: #0e1014; --text: #eceef2; --muted: #9aa1ad; --border: #2c3039; --code: #1d2027; } }
+    body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.6 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif; }
+    main { max-width: 680px; margin: 0 auto; padding: 48px 16px; }
+    h1 { margin: 0 0 8px; letter-spacing: -.02em; }
+    p { color: var(--muted); }
+    pre { background: var(--code); border: 1px solid var(--border); border-radius: 12px; padding: 14px; overflow-x: auto; font-size: 13.5px; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Your product website</h1>
+    <p>This page shows how the chat widget looks on a normal website. Click the round button in the bottom-right corner.</p>
+    <p>Add it to any page with two lines:</p>
+    <pre><code>&lt;script src="https://YOUR-SERVER/widget.js"&gt;&lt;/script&gt;
+&lt;truthlayer-chat endpoint="https://YOUR-SERVER"&gt;&lt;/truthlayer-chat&gt;</code></pre>
+    <p>Change the color with <code>accent="#0f766e"</code>.</p>
+  </main>
+  <script src="/widget.js"></script>
+  <truthlayer-chat accent="#0f766e"></truthlayer-chat>
+</body>
+</html>

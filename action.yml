@@ -1,0 +1,84 @@
+name: 'TruthLayer Knowledge Check'
+description: 'Find outdated and conflicting facts in your docs on every pull request, before your AI assistant repeats them.'
+author: 'TruthLayer'
+branding:
+  icon: 'check-circle'
+  color: 'green'
+
+inputs:
+  working-directory:
+    description: 'Folder that contains truthlayer.yml.'
+    default: '.'
+  config:
+    description: 'Path to the config file, if it is not truthlayer.yml.'
+    default: ''
+  strict:
+    description: 'Fail the job when TruthLayer finds errors (outdated facts, conflicts, removed endpoints).'
+    default: 'false'
+  comment:
+    description: 'Post (or update) a comment on the pull request with the report.'
+    default: 'true'
+  github-token:
+    description: 'Token used to post the PR comment.'
+    default: ${{ github.token }}
+
+outputs:
+  errors:
+    description: 'Number of errors found.'
+    value: ${{ steps.check.outputs.errors }}
+
+runs:
+  using: 'composite'
+  steps:
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+
+    - name: Install TruthLayer
+      shell: bash
+      run: npm ci --omit=dev --no-audit --no-fund --prefix "$GITHUB_ACTION_PATH"
+
+    - name: Run knowledge check
+      id: check
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      env:
+        TL_BASE: ${{ github.event.pull_request.base.sha }}
+        TL_CONFIG: ${{ inputs.config }}
+        TRUTHLAYER_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      run: |
+        REPORT="$RUNNER_TEMP/truthlayer-report.md"
+        ARGS=(check --format markdown --output "$REPORT" --json-output "$RUNNER_TEMP/truthlayer-report.json")
+        if [ -n "$TL_BASE" ]; then ARGS+=(--base "$TL_BASE"); fi
+        if [ -n "$TL_CONFIG" ]; then ARGS+=(--config "$TL_CONFIG"); fi
+        node "$GITHUB_ACTION_PATH/src/cli.js" "${ARGS[@]}"
+        ERRORS=$(node -e "console.log(require(process.argv[1]).summary.errors)" "$RUNNER_TEMP/truthlayer-report.json")
+        echo "errors=$ERRORS" >> "$GITHUB_OUTPUT"
+        cat "$REPORT" >> "$GITHUB_STEP_SUMMARY"
+
+    - name: Comment on pull request
+      if: inputs.comment == 'true' && github.event_name == 'pull_request'
+      continue-on-error: true # PRs from forks cannot write comments
+      uses: actions/github-script@v7
+      with:
+        github-token: ${{ inputs.github-token }}
+        script: |
+          const fs = require('fs');
+          const body = fs.readFileSync(`${process.env.RUNNER_TEMP}/truthlayer-report.md`, 'utf8');
+          const marker = '<!-- truthlayer-report -->';
+          const { owner, repo } = context.repo;
+          const issue_number = context.issue.number;
+          const comments = await github.paginate(github.rest.issues.listComments, { owner, repo, issue_number, per_page: 100 });
+          const existing = comments.find((c) => c.body && c.body.includes(marker));
+          if (existing) {
+            await github.rest.issues.updateComment({ owner, repo, comment_id: existing.id, body });
+          } else if (!body.includes('<!-- truthlayer-clean -->')) {
+            await github.rest.issues.createComment({ owner, repo, issue_number, body });
+          }
+
+    - name: Fail on errors
+      if: inputs.strict == 'true' && steps.check.outputs.errors != '0'
+      shell: bash
+      run: |
+        echo "::error::TruthLayer found ${{ steps.check.outputs.errors }} outdated or conflicting facts."
+        exit 1

@@ -1,0 +1,50 @@
+{
+  "name": "truthlayer",
+  "version": "0.1.0",
+  "description": "Docs CI for AI assistants: find outdated and conflicting facts in your docs, and answer questions with sources.",
+  "type": "module",
+  "bin": {
+    "truthlayer": "src/cli.js"
+  },
+  "files": [
+    "src",
+    "action.yml",
+    "skills",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20.12"
+  },
+  "scripts": {
+    "test": "node --test",
+    "check:example": "node src/cli.js check --cwd examples/acme-docs",
+    "dev:example": "node src/cli.js dev --cwd examples/acme-docs"
+  },
+  "keywords": [
+    "docs",
+    "documentation",
+    "ai",
+    "assistant",
+    "rag",
+    "chatbot",
+    "openapi",
+    "changelog",
+    "ci",
+    "github-action",
+    "docs-as-code"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "yaml": "^2.9.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YashThokal777/truthlayer.git"
+  },
+  "homepage": "https://github.com/YashThokal777/truthlayer#readme",
+  "bugs": {
+    "url": "https://github.com/YashThokal777/truthlayer/issues"
+  },
+  "author": "Yash Thokal"
+}
