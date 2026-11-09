@@ -35,7 +35,10 @@ export const DEFAULTS = {
 export const PROVIDERS = {
   gemini: {
     base_url: 'https://generativelanguage.googleapis.com/v1beta/openai',
-    model: 'gemini-3.8-flash',
+    // Tested on the free tier on 2026-11-09: 3.5 Flash answers in ~2 s, while newer
+    // models (3.8 Flash, "flash-latest") hung for more than 45 s.
+    model: 'gemini-3.5-flash',
+    fallback_models: ['gemini-3.1-flash-lite'],
     api_key_env: 'GEMINI_API_KEY',
     fallback_key_env: 'GOOGLE_API_KEY',
     reasoning_effort: 'low',

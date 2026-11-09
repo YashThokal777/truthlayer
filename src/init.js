@@ -71,7 +71,7 @@ assistant:
   # gemini (free key: https://aistudio.google.com/apikey) -> put GEMINI_API_KEY=... in .env
   # groq -> GROQ_API_KEY · ollama -> fully local, no key · custom -> set base_url, model, api_key_env
   provider: gemini
-  # model: gemini-3.8-flash
+  # model: gemini-3.5-flash
   suggestions: []
 `;
     fs.writeFileSync(configPath, yml);

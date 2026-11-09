@@ -77,7 +77,9 @@ check:
 
 assistant:
   provider: gemini        # gemini | groq | ollama | custom
-  # model: gemini-3.8-flash          # optional: override the provider's default model
+  # model: gemini-3.5-flash          # optional: override the provider's default model
+  # fallback_models: [gemini-3.1-flash-lite]   # tried when the main model is slow, busy or missing
+  # timeout_seconds: 30
   top_k: 5                # how many doc sections to send to the AI
   suggestions:
     - What is the API rate limit?
@@ -85,7 +87,7 @@ assistant:
 
 | `provider` | Default model | Key (in `.env`) |
 |---|---|---|
-| `gemini` (default) | `gemini-3.8-flash` | `GEMINI_API_KEY` (or `GOOGLE_API_KEY`) |
+| `gemini` (default) | `gemini-3.5-flash`, falls back to `gemini-3.1-flash-lite` | `GEMINI_API_KEY` (or `GOOGLE_API_KEY`) |
 | `groq` | `openai/gpt-oss-20b` | `GROQ_API_KEY` |
 | `ollama` | `llama3.2` | none — runs on your computer |
 | `custom` | set `model` | set `base_url` and `api_key_env` — any OpenAI-compatible API |

@@ -21,39 +21,71 @@ export function llmStatus(config) {
   const key =
     process.env[a.api_key_env] || (a.fallback_key_env && process.env[a.fallback_key_env]) || process.env.TRUTHLAYER_API_KEY || '';
   const local = isLocal(baseUrl);
+  // An explicit TRUTHLAYER_MODEL means "use exactly this model".
+  const fallbacks = process.env.TRUTHLAYER_MODEL ? [] : [].concat(a.fallback_models ?? []);
   return {
     enabled: !!key || local,
     key,
     local,
     model,
+    models: [model, ...fallbacks.filter((m) => m && m !== model)],
     baseUrl,
     provider: a.provider,
     keyEnv: a.api_key_env,
     maxTokens: a.max_tokens,
     reasoningEffort: a.reasoning_effort,
+    timeoutMs: Number(a.timeout_seconds ?? 30) * 1000,
   };
 }
 
-async function chatCompletion({ baseUrl, key, model, messages, maxTokens, reasoningEffort }) {
+class ProviderError extends Error {
+  constructor(message, { retry = false } = {}) {
+    super(message);
+    this.retry = retry; // true: another model may work (busy, slow, missing model)
+  }
+}
+
+async function callModel({ baseUrl, key, model, messages, maxTokens, reasoningEffort, timeoutMs }) {
   const body = { model, messages, temperature: 0.2, max_tokens: maxTokens ?? 2048 };
   if (reasoningEffort) body.reasoning_effort = reasoningEffort;
-  const res = await fetch(`${baseUrl.replace(/\/+$/, '')}/chat/completions`, {
-    method: 'POST',
-    headers: { 'content-type': 'application/json', ...(key ? { authorization: `Bearer ${key}` } : {}) },
-    body: JSON.stringify(body),
-    signal: AbortSignal.timeout(60_000),
-  });
+  let res;
+  try {
+    res = await fetch(`${baseUrl.replace(/\/+$/, '')}/chat/completions`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', ...(key ? { authorization: `Bearer ${key}` } : {}) },
+      body: JSON.stringify(body),
+      signal: AbortSignal.timeout(timeoutMs),
+    });
+  } catch (e) {
+    if (e.name === 'TimeoutError') throw new ProviderError(`The model "${model}" did not answer in ${Math.round(timeoutMs / 1000)} seconds.`, { retry: true });
+    throw new ProviderError(`Could not reach the AI provider (${e.cause?.code ?? e.message}). Check your internet connection.`);
+  }
   if (!res.ok) {
     const text = (await res.text()).slice(0, 300);
-    if (res.status === 429) throw new Error('The AI provider rate limit was reached (free tiers allow only a few requests per minute). Wait a minute and try again.');
     if (res.status === 401 || res.status === 403 || /api key not valid|invalid api key|API_KEY_INVALID/i.test(text)) {
-      throw new Error('The API key was rejected. Check the key in your .env file.');
+      throw new ProviderError('The API key was rejected. Check the key in your .env file.');
     }
-    if (res.status === 404) throw new Error(`The model "${model}" was not found. Check assistant.model in truthlayer.yml.`);
-    throw new Error(`The AI provider returned ${res.status}: ${text}`);
+    if (res.status === 429) throw new ProviderError('The AI provider rate limit was reached (free tiers allow only a few requests per minute). Wait a minute and try again.', { retry: true });
+    if (res.status === 404) throw new ProviderError(`The model "${model}" was not found. Check assistant.model in truthlayer.yml.`, { retry: true });
+    if (res.status >= 500) throw new ProviderError(`The AI provider had an error (${res.status}). Try again soon.`, { retry: true });
+    throw new ProviderError(`The AI provider returned ${res.status}: ${text}`);
   }
   const data = await res.json();
   return String(data.choices?.[0]?.message?.content ?? '').trim();
+}
+
+/** Try the main model, then each fallback model when the error is one another model could avoid. */
+async function chatCompletion(status, messages) {
+  let last;
+  for (const model of status.models) {
+    try {
+      return { text: await callModel({ ...status, model, messages }), model };
+    } catch (e) {
+      last = e;
+      if (!e.retry) break;
+    }
+  }
+  throw last;
 }
 
 function systemPrompt(name) {
@@ -162,18 +194,11 @@ export function createAssistant(config) {
       const known = warnings.length ? `\n\nKnown problems in these sources:\n${warnings.map((w) => `- ${w.text}`).join('\n')}` : '';
 
       try {
-        const answer = await chatCompletion({
-          baseUrl: status.baseUrl,
-          key: status.key,
-          model: status.model,
-          maxTokens: status.maxTokens,
-          reasoningEffort: status.reasoningEffort,
-          messages: [
-            { role: 'system', content: systemPrompt(config.name) },
-            { role: 'user', content: `Sources:\n\n${context}${known}\n\nQuestion: ${question}` },
-          ],
-        });
-        return { mode: 'llm', answer: answer || 'The AI returned an empty answer. Please try again.', sources: publicSources, warnings };
+        const { text, model } = await chatCompletion(status, [
+          { role: 'system', content: systemPrompt(config.name) },
+          { role: 'user', content: `Sources:\n\n${context}${known}\n\nQuestion: ${question}` },
+        ]);
+        return { mode: 'llm', model, answer: text || 'The AI returned an empty answer. Please try again.', sources: publicSources, warnings };
       } catch (e) {
         return { mode: 'error', answer: `${e.message} Showing the most relevant parts of the docs instead.`, sources: publicSources, warnings };
       }
