@@ -45,9 +45,46 @@ export function planFromCell(cell) {
   return m ? normPlan(m[1]) : null;
 }
 
-export function detectPlan(sentence, heading) {
-  const m = sentence.match(PLAN_AFTER) || sentence.match(PLAN_BEFORE);
-  if (m) return normPlan(m[1]);
+const PLAN_AFTER_G = new RegExp(PLAN_AFTER.source, 'gi');
+const PLAN_BEFORE_G = new RegExp(PLAN_BEFORE.source, 'gi');
+
+/** [start, end) spans of the (parenthesised) parts of a sentence. */
+function parenSpans(sentence) {
+  const spans = [];
+  let open = -1;
+  for (let i = 0; i < sentence.length; i++) {
+    if (sentence[i] === '(' && open < 0) open = i;
+    else if (sentence[i] === ')' && open >= 0) { spans.push([open, i + 1]); open = -1; }
+  }
+  return spans;
+}
+
+/**
+ * Which plan a fact belongs to.
+ * Without `at`, the first plan named in the sentence wins (then the heading).
+ * With `at` (where the fact starts in the sentence), the nearest plan mention wins,
+ * and a plan named inside brackets only covers facts inside those brackets:
+ * in "Unlimited projects (the Free plan includes 10 projects)", only the 10 is Free.
+ */
+export function detectPlan(sentence, heading, at) {
+  const mentions = [...sentence.matchAll(PLAN_AFTER_G), ...sentence.matchAll(PLAN_BEFORE_G)]
+    .map((m) => ({ plan: normPlan(m[1]), pos: m.index }))
+    .sort((a, b) => a.pos - b.pos);
+  if (mentions.length) {
+    if (at == null) return mentions[0].plan;
+    const spans = parenSpans(sentence);
+    const spanOf = (pos) => spans.find(([a, b]) => pos >= a && pos < b);
+    const mine = spanOf(at);
+    const usable = mentions.filter((m) => {
+      const theirs = spanOf(m.pos);
+      return !theirs || theirs === mine;
+    });
+    if (usable.length) {
+      const before = usable.filter((m) => m.pos <= at).at(-1);
+      return (before ?? usable[0]).plan;
+    }
+    // Every plan named in this sentence was inside other brackets: use the heading.
+  }
   if (heading) {
     const h = heading.match(PLAN_AFTER) || heading.match(PLAN_ALONE);
     if (h) return normPlan(h[1]);
@@ -158,71 +195,71 @@ export function extractFacts(sentence, { isTable = false } = {}) {
   const facts = [];
   const eps = findEndpoints(sentence);
   const epKey = eps.length === 1 ? ` ${eps[0].method} ${normalizePath(eps[0].path)}` : '';
-  const add = (kind, subject, value, raw) => {
+  const add = (kind, subject, value, m) => {
     if (value == null) return;
-    facts.push({ kind, subject, value, raw: raw.trim() });
+    facts.push({ kind, subject, value, raw: m[0].trim(), at: m.index ?? 0 });
   };
 
   let rate = false;
   for (const m of sentence.matchAll(RATE_RE)) {
     rate = true;
-    add('rate_limit', `per ${TIME_UNITS[m[2].toLowerCase()]}${epKey}`, parseNum(m[1]), m[0]);
+    add('rate_limit', `per ${TIME_UNITS[m[2].toLowerCase()]}${epKey}`, parseNum(m[1]), m);
   }
   if (!rate) {
     const m = sentence.match(RATE2_RE);
-    if (m) add('rate_limit', `per ${TIME_UNITS[m[2].toLowerCase()]}${epKey}`, parseNum(m[1]), m[0]);
+    if (m) add('rate_limit', `per ${TIME_UNITS[m[2].toLowerCase()]}${epKey}`, parseNum(m[1]), m);
   }
 
   for (const m of sentence.matchAll(PRICE_RE)) {
     const unit = { mo: 'month', yr: 'year', annum: 'year' }[m[3].toLowerCase()] ?? m[3].toLowerCase();
-    add('price', `${m[2] ? `per ${m[2].toLowerCase()} ` : ''}per ${unit}`, parseNum(m[1]), m[0]);
+    add('price', `${m[2] ? `per ${m[2].toLowerCase()} ` : ''}per ${unit}`, parseNum(m[1]), m);
   }
 
   if (isTable || LIMIT_CTX.test(sentence)) {
     for (const m of sentence.matchAll(QTY_RE)) {
       const adj = m[2] ? m[2].trim().toLowerCase() + ' ' : '';
       const per = m[4] ? ` per ${m[4].toLowerCase()}` : '';
-      add('quantity', `${adj}${singular(m[3])}${per}`, parseNum(m[1]), m[0]);
+      add('quantity', `${adj}${singular(m[3])}${per}`, parseNum(m[1]), m);
     }
   }
 
   let storage = false;
   for (const m of sentence.matchAll(STORAGE_RE)) {
     storage = true;
-    add('storage', m[3].toLowerCase() === 'bandwidth' || m[3].toLowerCase() === 'transfer' ? 'bandwidth' : 'storage', parseNum(m[1]) * MB[m[2].toLowerCase()], m[0]);
+    add('storage', m[3].toLowerCase() === 'bandwidth' || m[3].toLowerCase() === 'transfer' ? 'bandwidth' : 'storage', parseNum(m[1]) * MB[m[2].toLowerCase()], m);
   }
   if (!storage) {
     const m = sentence.match(STORAGE2_RE);
-    if (m) add('storage', m[1].toLowerCase(), parseNum(m[2]) * MB[m[3].toLowerCase()], m[0]);
+    if (m) add('storage', m[1].toLowerCase(), parseNum(m[2]) * MB[m[3].toLowerCase()], m);
   }
 
   let size = false;
   for (const m of sentence.matchAll(SIZE_RE)) {
     size = true;
-    add('size_limit', `${m[1].toLowerCase()} size`, parseNum(m[2]) * MB[m[3].toLowerCase()], m[0]);
+    add('size_limit', `${m[1].toLowerCase()} size`, parseNum(m[2]) * MB[m[3].toLowerCase()], m);
   }
   if (!size) {
     for (const m of sentence.matchAll(SIZE2_RE)) {
-      add('size_limit', `${singular(m[1])} size`, parseNum(m[2]) * MB[m[3].toLowerCase()], m[0]);
+      add('size_limit', `${singular(m[1])} size`, parseNum(m[2]) * MB[m[3].toLowerCase()], m);
     }
   }
 
   let page = false;
   for (const m of sentence.matchAll(PAGE_RE)) {
     page = true;
-    add('pagination', 'items per page', parseNum(m[1]), m[0]);
+    add('pagination', 'items per page', parseNum(m[1]), m);
   }
   if (!page) {
     const m = sentence.match(PAGE2_RE);
-    if (m) add('pagination', 'items per page', parseNum(m[1]), m[0]);
+    if (m) add('pagination', 'items per page', parseNum(m[1]), m);
   }
 
   for (const m of sentence.matchAll(RETENTION_RE)) {
-    add('retention', 'data retention', parseNum(m[1]) * DAYS[m[2].toLowerCase()], m[0]);
+    add('retention', 'data retention', parseNum(m[1]) * DAYS[m[2].toLowerCase()], m);
   }
 
   for (const m of sentence.matchAll(TIMEOUT_RE)) {
-    add('timeout', `timeout${epKey}`, parseNum(m[1]) * SECONDS[m[2].toLowerCase()], m[0]);
+    add('timeout', `timeout${epKey}`, parseNum(m[1]) * SECONDS[m[2].toLowerCase()], m);
   }
 
   if (MINVER_CTX.test(sentence) || /\+|or (?:later|higher|newer|above|greater)/i.test(sentence)) {
@@ -231,12 +268,12 @@ export function extractFacts(sentence, { isTable = false } = {}) {
       // Skip package coordinates and paths such as "com.acme:android 2.1.0" or "sdk/ios 3.0".
       if (/[:./@-]$/.test(sentence.slice(0, m.index))) continue;
       const name = m[1].toLowerCase();
-      add('min_version', `minimum ${RUNTIME_NAMES[name] ?? name} version`, m[2], m[0]);
+      add('min_version', `minimum ${RUNTIME_NAMES[name] ?? name} version`, m[2], m);
     }
   }
 
   const pv = sentence.match(PRODVER_RE);
-  if (pv) add('product_version', 'latest version', pv[1], pv[0]);
+  if (pv) add('product_version', 'latest version', pv[1], pv);
 
   return facts;
 }

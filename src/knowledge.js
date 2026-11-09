@@ -72,8 +72,8 @@ export function buildKnowledge(config) {
         for (const s of sections) kb.sections.push({ ...s, file, date, type: 'markdown', truth: source.truth });
         const scope = versionScope(file);
         for (const s of sentences) {
-          const plan = s.plan ?? detectPlan(s.text, s.heading);
           for (const f of extractFacts(s.text, { isTable: s.isTable })) {
+            const plan = s.plan ?? detectPlan(s.text, s.heading, f.at);
             pushFact(f, { file, line: s.line, sentence: s.text, date, type: 'markdown', truth: source.truth, plan, scope });
           }
           for (const e of findEndpoints(s.text)) {
@@ -97,7 +97,7 @@ export function buildKnowledge(config) {
         for (const f of spec.facts) pushFact(f, { ...meta, line: f.line, sentence: f.raw });
         for (const s of spec.sentences) {
           for (const f of extractFacts(s.text)) {
-            pushFact(f, { ...meta, line: s.line, sentence: s.text, plan: detectPlan(s.text, s.heading) });
+            pushFact(f, { ...meta, line: s.line, sentence: s.text, plan: detectPlan(s.text, s.heading, f.at) });
           }
         }
       }
@@ -128,7 +128,7 @@ export function buildKnowledge(config) {
             for (const f of extractFacts(text)) {
               pushFact(f, {
                 file, line: item.line, sentence: item.text, date, type: 'changelog', truth: source.truth,
-                plan: detectPlan(item.text, ''), version: entry.version, oldValue,
+                plan: detectPlan(text, '', f.at), version: entry.version, oldValue,
               });
             }
             for (const e of endpointEvents(item.text)) {

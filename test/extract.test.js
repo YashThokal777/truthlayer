@@ -42,6 +42,21 @@ test('plans are detected from the sentence or the heading', () => {
   assert.equal(detectPlan('Feel free to ask.', ''), null);
 });
 
+test('a plan named in brackets only covers the facts inside them', () => {
+  const s = 'Unlimited projects (the Free plan includes 10 projects).';
+  const [unlimited, ten] = extractFacts(s);
+  assert.equal(detectPlan(s, 'Pro plan', unlimited.at), 'pro');
+  assert.equal(detectPlan(s, 'Pro plan', ten.at), 'free');
+  assert.equal(detectPlan(s, '', unlimited.at), null);
+});
+
+test('the nearest plan mention wins when a sentence names two plans', () => {
+  const s = 'The Free plan includes 5 projects and the Pro plan includes 50 projects.';
+  const [five, fifty] = extractFacts(s);
+  assert.equal(detectPlan(s, '', five.at), 'free');
+  assert.equal(detectPlan(s, '', fifty.at), 'pro');
+});
+
 test('changelog "from X to Y" keeps the new value and remembers the old one', () => {
   const r = rewriteChange('Increased the rate limit from 100 to 200 requests per minute.');
   assert.equal(r.oldValue, 100);
