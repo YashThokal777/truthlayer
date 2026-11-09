@@ -1,6 +1,6 @@
 {
   "name": "truthlayer",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Docs CI for AI assistants: find outdated and conflicting facts in your docs, and answer questions with sources.",
   "type": "module",
   "bin": {
