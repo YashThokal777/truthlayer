@@ -39,7 +39,7 @@ export function toTerminal(report, { cwdLabel } = {}) {
     '  ' +
       [
         (s.outdated ? color.red : color.green)(`${s.outdated ? '✖' : '✔'} ${s.outdated} outdated`),
-        (s.conflicts ? color.red : color.green)(`${s.conflicts ? '✖' : '✔'} ${plural(s.conflicts, 'conflict')}`),
+        (s.conflicts ? color.yellow : color.green)(`${s.conflicts ? '⚠' : '✔'} ${plural(s.conflicts, 'conflict')}`),
         (s.endpointWarnings ? color.yellow : color.green)(`${s.endpointWarnings ? '⚠' : '✔'} ${plural(s.endpointWarnings, 'endpoint warning')}`),
         color.gray(`ℹ ${plural(s.oldPages, 'old page')}`),
       ].join('   '),

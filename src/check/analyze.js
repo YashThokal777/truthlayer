@@ -61,6 +61,9 @@ function checkFacts(kb, findings) {
 
     if (truths.length) {
       if (distinctValues(truths).length > 1) {
+        // Two OpenAPI files with different values usually describe two APIs (v1 and v2),
+        // so neither can be used to judge the docs.
+        if (truths.every((t) => t.type === 'openapi') && new Set(truths.map((t) => t.file)).size > 1) continue;
         findings.push({
           type: 'conflict',
           severity: 'error',
@@ -91,11 +94,13 @@ function checkFacts(kb, findings) {
       continue;
     }
 
-    if (distinctValues(docs).length > 1) {
+    // Doc-only disagreements are warnings: without a source of truth TruthLayer cannot
+    // know which page is right, and values in one file (a table of tiers) usually differ on purpose.
+    if (distinctValues(docs).length > 1 && new Set(docs.map((d) => d.file)).size > 1) {
       const sorted = [...docs].sort((a, b) => (b.date ?? 0) - (a.date ?? 0));
       findings.push({
         type: 'conflict',
-        severity: 'error',
+        severity: 'warning',
         title: label,
         summary: `${new Set(docs.map((d) => d.file)).size} pages give different values. Your assistant may answer either one.`,
         items: sorted.map((d, i) => item(d, 'conflict', i === 0 ? 'newest' : undefined)),
@@ -103,6 +108,24 @@ function checkFacts(kb, findings) {
       });
     }
   }
+}
+
+/** "/users/{}" -> "users"; "/v2/users" -> "v2/users" (a version segment alone says nothing). */
+export function apiPrefix(key) {
+  const segs = key.split('/').filter(Boolean);
+  if (!segs.length) return '';
+  return /^v\d+$/i.test(segs[0]) && segs[1] ? `${segs[0]}/${segs[1]}` : segs[0];
+}
+
+/**
+ * Only call an endpoint "unknown" when it looks like part of this API: it shares a first path
+ * segment with the spec. Paths for other services (Salesforce /sobjects, OAuth /.well-known)
+ * and partial paths ("/api/", "/users/*") are skipped.
+ */
+function looksLikeOurApi(m, prefixes) {
+  const raw = String(m.raw).split(/\s+/).pop().split('?')[0].replace(/^https?:\/\/[^/]+/i, '');
+  if (/\/\/|\*|\/\.well-known/.test(raw) || /\/$/.test(raw)) return false;
+  return prefixes.has(apiPrefix(m.key));
 }
 
 function checkEndpoints(kb, findings) {
@@ -114,6 +137,7 @@ function checkEndpoints(kb, findings) {
     if (!prev || (e.date ?? 0) > (prev.date ?? 0)) events.set(k, e);
   }
   const hasSpec = kb.endpoints.length > 0;
+  const prefixes = new Set(kb.endpoints.map((e) => apiPrefix(e.key)));
   const byEndpoint = new Map();
 
   for (const m of kb.mentions) {
@@ -124,7 +148,7 @@ function checkEndpoints(kb, findings) {
     let type = null;
     if (event?.status === 'removed' && !inSpec) type = 'removed_endpoint';
     else if (inSpec?.deprecated || event?.status === 'deprecated') type = 'deprecated_endpoint';
-    else if (hasSpec && !inSpec) type = 'unknown_endpoint';
+    else if (hasSpec && !inSpec && looksLikeOurApi(m, prefixes)) type = 'unknown_endpoint';
     if (!type) continue;
     if (!byEndpoint.has(k)) byEndpoint.set(k, { type, mention: m, inSpec, event, items: [] });
     byEndpoint.get(k).items.push(m);

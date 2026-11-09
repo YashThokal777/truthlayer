@@ -26,8 +26,8 @@ test('the example finds every planted problem and nothing else', () => {
     'stale: Maximum items per page',
     'stale: Project limit — Free plan',
   ]);
-  assert.equal(r.summary.errors, 5);
-  assert.equal(r.summary.warnings, 1);
+  assert.equal(r.summary.errors, 4);
+  assert.equal(r.summary.warnings, 2);
 });
 
 test('stale findings point at the outdated line and explain the change', () => {
@@ -66,5 +66,44 @@ test('versioned docs folders are not compared with current facts', () => {
   fs.writeFileSync(path.join(dir, 'docs', 'v1', 'limits.md'), '# Limits (v1)\nEach key can make 100 requests per minute.\n');
   fs.writeFileSync(path.join(dir, 'truthlayer.yml'), 'sources:\n  - type: markdown\n    path: ./docs\n');
   assert.equal(run(dir).findings.length, 0);
+  fs.rmSync(dir, { recursive: true, force: true });
+});
+
+function tempProject(files) {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'truthlayer-'));
+  for (const [name, text] of Object.entries(files)) {
+    fs.mkdirSync(path.dirname(path.join(dir, name)), { recursive: true });
+    fs.writeFileSync(path.join(dir, name), text);
+  }
+  return dir;
+}
+
+test('different values in one file are not a conflict, but across files they are a warning', () => {
+  const dir = tempProject({
+    'truthlayer.yml': 'sources:\n  - type: markdown\n    path: ./docs\n',
+    'docs/a.md': '# A\nSmall servers need at least 100 GB of disk.\n\nLarge servers need at least 500 GB of disk.\n',
+  });
+  assert.equal(run(dir).findings.length, 0);
+  fs.writeFileSync(path.join(dir, 'docs', 'b.md'), '# B\nRequires Node.js 18 or later.\n');
+  fs.writeFileSync(path.join(dir, 'docs', 'c.md'), '# C\nRequires Node.js 20 or later.\n');
+  const r = run(dir);
+  assert.deepEqual(r.findings.map((f) => `${f.type} ${f.severity}`), ['conflict warning']);
+  fs.rmSync(dir, { recursive: true, force: true });
+});
+
+test('unknown endpoints are only reported for paths that look like this API', () => {
+  const dir = tempProject({
+    'truthlayer.yml': 'sources:\n  - type: markdown\n    path: ./docs\n  - type: openapi\n    path: ./openapi.yaml\n',
+    'openapi.yaml': 'openapi: 3.0.0\ninfo: { title: t, version: "1" }\npaths:\n  /users:\n    get: { responses: { "200": { description: ok } } }\n',
+    'docs/a.md': [
+      '# A',
+      'Call `GET /users/{id}/roles` to list roles.',
+      'Salesforce data comes from `GET /sobjects/Account`.',
+      'Discovery lives at `GET /.well-known/openid-configuration`.',
+      '',
+    ].join('\n'),
+  });
+  const r = run(dir);
+  assert.deepEqual(r.findings.map((f) => `${f.type}: ${f.title}`), ['unknown_endpoint: GET /users/{id}/roles']);
   fs.rmSync(dir, { recursive: true, force: true });
 });

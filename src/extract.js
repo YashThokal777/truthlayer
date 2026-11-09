@@ -228,6 +228,8 @@ export function extractFacts(sentence, { isTable = false } = {}) {
   if (MINVER_CTX.test(sentence) || /\+|or (?:later|higher|newer|above|greater)/i.test(sentence)) {
     for (const m of sentence.matchAll(MINVER_RE)) {
       if (!m[3] && !MINVER_CTX.test(sentence)) continue;
+      // Skip package coordinates and paths such as "com.acme:android 2.1.0" or "sdk/ios 3.0".
+      if (/[:./@-]$/.test(sentence.slice(0, m.index))) continue;
       const name = m[1].toLowerCase();
       add('min_version', `minimum ${RUNTIME_NAMES[name] ?? name} version`, m[2], m[0]);
     }

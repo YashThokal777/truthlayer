@@ -15,7 +15,7 @@ $ npx truthlayer check
 TruthLayer · Acme Assistant
 Scanned 6 pages, 1 OpenAPI spec, 1 changelog · 23 facts
 
-  ✖ 4 outdated   ✖ 1 conflict   ⚠ 1 endpoint warning   ℹ 0 old pages
+  ✖ 4 outdated   ⚠ 1 conflict   ⚠ 1 endpoint warning   ℹ 0 old pages
 
 ✖ OUTDATED  API rate limit (per minute)
   1 page says something different from the source of truth.
@@ -24,7 +24,7 @@ Scanned 6 pages, 1 OpenAPI spec, 1 changelog · 23 facts
     ✗ outdated        docs/api/rate-limits.md:3  100 requests per minute
   → Changelog 2.0.0 changed this from 100 to 200. The page still shows the old value.
 
-✖ CONFLICT  Minimum node version
+⚠ CONFLICT  Minimum node version
   2 pages give different values. Your assistant may answer either one.
     • says            docs/faq.md:5              Node.js 20 or later (newest)
     • says            docs/getting-started.md:7  Node.js 18 or later
@@ -115,8 +115,8 @@ Facts are compared only when they mean the same thing: same kind, same plan (Fre
 **Finding types**
 
 - **Outdated** — a page disagrees with your OpenAPI spec or the newest changelog entry.
-- **Conflict** — two pages disagree and there is no source of truth to decide.
-- **Removed / deprecated / unknown endpoint** — a page mentions an endpoint that is gone, deprecated, or missing from the spec.
+- **Conflict** (warning) — two pages disagree and there is no source of truth to decide. Values inside one page (like a table of tiers) are not compared with each other.
+- **Removed / deprecated / unknown endpoint** — a page mentions an endpoint that is gone, deprecated, or missing from the spec. "Unknown" is only reported for paths that share a first segment with the spec, so links to other services are skipped.
 - **Old page** — a page has not changed for `stale_after_days` (uses git history).
 
 ### Avoiding false alarms

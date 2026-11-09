@@ -75,3 +75,8 @@ test('ignore comments and code blocks', () => {
   const { sentences } = parseMarkdown(md);
   assert.deepEqual(sentences.map((s) => s.text), ['Now: 300 requests per minute.']);
 });
+
+test('package coordinates are not runtime versions', () => {
+  const kinds = extractFacts('Add com.formbricks:android 2.1.0 to your app. Requires Android 8 or later.').filter((f) => f.kind === 'min_version');
+  assert.deepEqual(kinds.map((f) => f.value), ['8']);
+});
